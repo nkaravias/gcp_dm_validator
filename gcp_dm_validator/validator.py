@@ -2,7 +2,7 @@ class Validator(object):
     def __init__(self, name):
         self.name = name
 
-    def validate(self):
+    def validate(self, payload):
         raise Exception('Abstract class must be instanciated')
 
 

@@ -1,15 +1,17 @@
-from validator import Validators
-from validators.serviceAccountValidator import ServiceAccountValidator
-from validators.serviceTierValidator import ServiceTierValidator
+from validator import Validators, Validator
 from dmConfiguration import DmConfiguration
 
 if __name__ == '__main__':
     print 'Starting gcp_dm_validator'
 
     validators = Validators()
-    validators.insert(ServiceTierValidator())
-    validators.insert(ServiceAccountValidator())
+    # Dynamically get all subclasses of Validator except Validators
+    # This way I don't need to import every new validator class
+    for c in Validator.__subclasses__():
+        if c.__name__ is 'Validators':
+            continue
+        validators.insert(c())
 
-    result = validators.validate('lala')
     dm_config = DmConfiguration()
-    print dm_config.apis
+    result = validators.validate(dm_config)
+    print result
